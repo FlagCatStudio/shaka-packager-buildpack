@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+set -eo pipefail
+
+shaka_packager_version="3.4.2"
+shaka_packager_url="https://github.com/shaka-project/shaka-packager/releases/download"
+shaka_packager_url="${shaka_packager_url}/v${shaka_packager_version}/packager-linux-x64"
+
+echo "---> Shaka Packager buildpack"
+
+shaka_packager_layer="${CNB_LAYERS_DIR}"/shaka-packager
+mkdir -p "${shaka_packager_layer}"/bin
+
+shaka_packager_binary="${shaka_packager_layer}/bin/shaka-packager"
+wget -q "${shaka_packager_url}" -O "${shaka_packager_binary}"
+chmod +x "${shaka_packager_binary}"
+
+cat > "${CNB_LAYERS_DIR}/shaka-packager.toml" << EOF
+[types]
+build = true
+cache = true
+launch = true
+EOF
+
+ls -R "${shaka_packager_layer}"
+
+exit 0

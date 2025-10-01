@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# This build pack is always enabled
+echo "ShakaPackager"
+exit 0
