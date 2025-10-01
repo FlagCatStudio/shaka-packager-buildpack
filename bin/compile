@@ -8,13 +8,14 @@ shaka_packager_url="${shaka_packager_url}/v${shaka_packager_version}/packager-li
 BUILD_DIR="$1"
 CACHE_DIR="$2"
 ENV_DIR="$3"
-INSTALL_DIR="${BUILD_DIR}/.shaka-player"
 
 echo "---> Shaka Packager buildpack"
 
+INSTALL_DIR="${BUILD_DIR}/.shaka-player"
 mkdir -p "${INSTALL_DIR}/bin"
-
 shaka_packager_binary="${INSTALL_DIR}/bin/shaka-packager"
+
+echo "Downloading shaka-packager from ${shaka_packager_url} to ${shaka_packager_binary}"
 wget -q "${shaka_packager_url}" -O "${shaka_packager_binary}"
 chmod +x "${shaka_packager_binary}"
 
@@ -23,4 +24,5 @@ mkdir -p "${BUILD_DIR}/.profile.d"
 cat <<EOF >"${BUILD_DIR}/.profile.d/000_shaka_player.sh"
 export PATH="\$PATH:\$HOME/.shaka-player/bin"
 EOF
+
 exit 0
