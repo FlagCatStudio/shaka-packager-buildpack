@@ -5,22 +5,22 @@ shaka_packager_version="3.4.2"
 shaka_packager_url="https://github.com/shaka-project/shaka-packager/releases/download"
 shaka_packager_url="${shaka_packager_url}/v${shaka_packager_version}/packager-linux-x64"
 
+BUILD_DIR="$1"
+CACHE_DIR="$2"
+ENV_DIR="$3"
+INSTALL_DIR="${BUILD_DIR}/.shaka-player"
+
 echo "---> Shaka Packager buildpack"
 
-shaka_packager_layer="${CNB_LAYERS_DIR}"/shaka-packager
-mkdir -p "${shaka_packager_layer}"/bin
+mkdir -p "${INSTALL_DIR}/bin"
 
-shaka_packager_binary="${shaka_packager_layer}/bin/shaka-packager"
+shaka_packager_binary="${INSTALL_DIR}/bin/shaka-packager"
 wget -q "${shaka_packager_url}" -O "${shaka_packager_binary}"
 chmod +x "${shaka_packager_binary}"
 
-cat > "${CNB_LAYERS_DIR}/shaka-packager.toml" << EOF
-[types]
-build = true
-cache = true
-launch = true
+# Write profile.d script for run time support
+mkdir -p "${BUILD_DIR}/.profile.d"
+cat <<EOF >"${BUILD_DIR}/.profile.d/000_shaka_player.sh"
+export PATH="\$PATH:\$HOME/.shaka-player/bin"
 EOF
-
-ls -R "${shaka_packager_layer}"
-
 exit 0
