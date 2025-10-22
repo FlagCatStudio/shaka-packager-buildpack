@@ -39,7 +39,7 @@ jobs:
           pack buildpack package --publish ${PACKAGE}:${VERSION}
           DIGEST="$(crane digest ${PACKAGE}:${VERSION})"
           echo "bp_id=$BP_ID" >> "$GITHUB_OUTPUT"
-          echo "version=$VERBOSE >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION >> "$GITHUB_OUTPUT"
           echo "address=${PACKAGE}@${DIGEST} >> "$GITHUB_OUTPUT"
 
       # - id: register
