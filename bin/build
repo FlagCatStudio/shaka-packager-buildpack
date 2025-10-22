@@ -1,26 +1,37 @@
 #!/usr/bin/env bash
 set -eo pipefail
 
+echo "---> shaka-packager buildpack"
+
 shaka_packager_version="3.4.2"
 shaka_packager_url="https://github.com/shaka-project/shaka-packager/releases/download"
 shaka_packager_url="${shaka_packager_url}/v${shaka_packager_version}/packager-linux-x64"
+shaka_packager_layer="${CNB_LAYERS_DIR}/shaka-packager"
+shaka_packager_binary="${shaka_packager_layer}/bin/shaka-packager"
+shaka_packager_cfg="${CNB_LAYERS_DIR}/shaka-packager.toml"
 
-echo "---> Shaka Packager buildpack"
-
-shaka_packager_layer="${CNB_LAYERS_DIR}"/shaka-packager
 mkdir -p "${shaka_packager_layer}"/bin
 
-shaka_packager_binary="${shaka_packager_layer}/bin/shaka-packager"
-wget -q "${shaka_packager_url}" -O "${shaka_packager_binary}"
-chmod +x "${shaka_packager_binary}"
+cached_version=$(cat "${shaka_packager_cfg}" 2> /dev/null \
+                     | yj -t \
+                     | jq -r .metadata.shaka_packager_version 2>/dev/null \
+                     || echo 'NOT FOUND')
 
-cat > "${CNB_LAYERS_DIR}/shaka-packager.toml" << EOF
+if [[ "${shaka_packager_version}" = "${cached_version}" ]] ; then
+    echo "-----> Reusing shaka-packager"
+else
+    echo "-----> Downloading shaka-packager"
+    wget -q "${shaka_packager_url}" -O "${shaka_packager_binary}"
+    chmod +x "${shaka_packager_binary}"
+fi
+
+
+cat > "${shaka_packager_cfg}" << EOF
 [types]
-build = true
-cache = true
-launch = true
+  cache = true
+  launch = true
+[metadata]
+  shaka_packager_version = "${shaka_packager_version}"
 EOF
-
-ls -R "${shaka_packager_layer}"
 
 exit 0

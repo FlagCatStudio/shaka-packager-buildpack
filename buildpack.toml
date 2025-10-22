@@ -1,11 +1,12 @@
 api = "0.10"
 
 WithWindowsBuild = false
-WithLinuxBuild = true
+WithLinuxBuild = false
 
 [buildpack]
-id = "github.com/flagcatstudio/heroku-shaka-packager"
-version = "0.0.1"
+id = "github.com/flagcatstudio/shaka-packager-buildpack"
+name = "shaka-packager-buildpack"
+version = "0.0.2"
 
 # Targets the buildpack will work with
 [[targets]]

@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
 
+cat >> "${CNB_BUILD_PLAN_PATH}" << EOF
+[[requires]]
+  name = "shaka-packager"
+[[requires]]
+  name = "yj"
+[[provides]]
+  name = "shaka-packager"
+EOF
+
+
 # This build pack is always enabled
-echo "ShakaPackager"
+echo "shaka-packager"
+
 exit 0
