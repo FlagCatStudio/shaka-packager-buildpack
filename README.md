@@ -1,7 +1,10 @@
 # Shaka Packager Buildpack
 
-A very simple buildpack to add the static build of shaka-packager
+A very simple cloud native buildpack to add the static build of shaka-packager
 
 ## Usage
 
-`heroku buildpacks:add -i 1 https://github.com/xxx -a APP_NAME`
+``` toml
+[[io.buildpacks.group]]
+  uri = "ghcr.io/flagcatstudio/buildpacks/flagcatstudio_shaka-packager-buildpack:0.0.1"
+```
